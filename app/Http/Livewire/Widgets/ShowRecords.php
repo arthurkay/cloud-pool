@@ -22,18 +22,16 @@ class ShowRecords extends Component
     }
 
     public function gotoPage($page, $pageName = 'page') {
-        $this->setPage($page);
+        $this->setPage($page, $pageName);
         $this->emit('recordUpdated');
     }
 
     public function previousPage($pageName = 'page') {
         $this->gotoPage($this->page -1, $pageName);
-        $this->emit('recordUpdated');
     }
 
     public function nextPage($pageName = 'page') {
         $this->gotoPage($this->page +1, $pageName);
-        $this->emit('recordUpdated');
     }
 
     public function render()
