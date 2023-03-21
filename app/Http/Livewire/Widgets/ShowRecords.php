@@ -21,6 +21,21 @@ class ShowRecords extends Component
         $this->records = Record::paginate(10);
     }
 
+    public function gotoPage($page, $pageName = 'page') {
+        $this->setPage($page);
+        $this->emit('recordUpdated');
+    }
+
+    public function previousPage($pageName = 'page') {
+        $this->gotoPage($this->page -1, $pageName);
+        $this->emit('recordUpdated');
+    }
+
+    public function nextPage($pageName = 'page') {
+        $this->gotoPage($this->page +1, $pageName);
+        $this->emit('recordUpdated');
+    }
+
     public function render()
     {
         $empty = new Paginator([], 10);
