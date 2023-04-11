@@ -7,7 +7,7 @@ use App\Models\Record;
 
 class CreateRecord extends Component
 {
-    public $name, $ttl = "3600", $type, $content;
+    public $name, $ttl = "3600", $type, $content, $priority;
 
     public function store() {
         $this->validate([
@@ -17,13 +17,24 @@ class CreateRecord extends Component
             'content' => 'required'
         ]);
 
-        Record::create([
-            'name' => $this->name,
-            'ttl' => $this->ttl,
-            'type' => $this->type,
-            'content' => $this->content,
-            'disabled' => 0
-        ]);
+        if ($this->type == "MX") {
+            Record::create([
+                'name' => $this->name,
+                'ttl' => $this->ttl,
+                'type' => $this->type,
+                'content' => $this->content,
+                'prio' => $this->priority,
+                'disabled' => 0
+            ]);
+        } else {
+            Record::create([
+                'name' => $this->name,
+                'ttl' => $this->ttl,
+                'type' => $this->type,
+                'content' => $this->content,
+                'disabled' => 0
+            ]);
+        }
         $this->emit('recordUpdated');
     }
 
