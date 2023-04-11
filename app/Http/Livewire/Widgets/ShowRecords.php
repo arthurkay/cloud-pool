@@ -13,7 +13,7 @@ class ShowRecords extends Component
     private $records;
     public $readyToLoad = false;
     protected $listeners = [
-        'recordUpdated' => 'loadRecords'
+        'recordUpdated' => 'loadRecords',
     ];
 
     public function loadRecords() {

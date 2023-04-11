@@ -62,16 +62,32 @@ class DashboardController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request)
     {
-        //
+        $record = Record::find($request->id);
+        $record->name = $request->host;
+        $record->ttl = $request->ttl;
+        $record->type = $request->type;
+        if ($request->type == "MX") {
+            $record->prio = $request->priority;
+        }
+        $record->content = $request->value;
+        
+        if ($record->save()) {
+            return redirect()->back()->with('success','Record updated successfully');
+        }
+        return redirect()->back()->with('error','Unable to update record');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy(Request $request)
     {
-        //
+        $record = Record::find($request->id);
+        if ($record->delete()) {
+            return redirect()->back()->with('success', 'Record successfully deleted');
+        }
+        return redirect()->back()->with('error', 'Unable to delete record');
     }
 }
