@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
 use App\Models\Record;
 
 class DashboardController extends Controller
@@ -84,10 +85,14 @@ class DashboardController extends Controller
      */
     public function destroy(Request $request)
     {
-        $record = Record::find($request->id);
-        if ($record->delete()) {
-            return redirect()->back()->with('success', 'Record successfully deleted');
-        }
-        return redirect()->back()->with('error', 'Unable to delete record');
+        Redis::hdel($request->zone, $request->id);
+        return redirect()->back()->with('success', 'Record successfully deleted');
+    }
+
+    public function zone(String $zone) {
+        $params = [
+            'zone' => $zone
+        ];
+        return view('zone', $params);
     }
 }

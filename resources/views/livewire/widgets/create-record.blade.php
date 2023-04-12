@@ -15,7 +15,7 @@
     
         <div class="relative z-0 mb-6 group">
             <select wire:model="type" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:bg-transparent dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" ">
-                <option value="A">A</option>
+                <option selected value="A">A</option>
                 <option value="AAAA">AAAA</option>
                 <option value="TXT">TXT</option>
                 <option value="CNAME">CNAME</option>
