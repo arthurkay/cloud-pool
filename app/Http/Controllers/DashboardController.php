@@ -108,6 +108,12 @@ class DashboardController extends Controller
         return redirect()->back()->with('success', 'Record successfully deleted');
     }
 
+    public function zoneDestroy(Request $request)
+    {
+        Redis::del($request->id);
+        return redirect()->back()->with('success', 'Zone successfully deleted');
+    }
+
     public function zone(String $zone) {
         $params = [
             'zone' => $zone

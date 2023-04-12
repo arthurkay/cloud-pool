@@ -24,8 +24,9 @@
                     </div>
                     <div class="p-6">
                         <div class="ml-auto flex justify-end">
-                            <x-danger-button class="ml-3">
-                                {{ __('Delete') }}
+                            <x-danger-button wire:click="$emit('delete', '{{$zone}}')" x-data=""
+                            x-on:click.prevent="$dispatch('open-modal', 'confirm-record-delete')">
+                                Delete
                             </x-danger-button>
                         </div>
                     </div>
@@ -37,7 +38,7 @@
         <div wire:loading.remove id="alert-border-5" class="flex p-4 border-t-4 border-gray-300 bg-gray-50 dark:bg-gray-800 dark:border-gray-600" role="alert">
             <svg class="flex-shrink-0 w-5 h-5 text-gray-800 dark:text-gray-300" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd"></path></svg>
             <div class="ml-3 text-sm font-medium text-gray-800 dark:text-gray-300">
-              No DNS records found
+              No DNS zones found
             </div>
             <button type="button" class="ml-auto -mx-1.5 -my-1.5 bg-gray-50 text-gray-500 rounded-lg focus:ring-2 focus:ring-gray-400 p-1.5 hover:bg-gray-200 inline-flex h-8 w-8 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 dark:hover:text-white" data-dismiss-target="#alert-border-5" aria-label="Close">
               <span class="sr-only">Dismiss</span>
@@ -53,17 +54,17 @@
         <livewire:widgets.create-zone />
     </div>
 
-    <x-modal name="confirm-record-delete" focusable id="modalDelete">
+    <x-modal name="confirm-record-delete" focusable>
         <div class="p-6">
             <h2 id="deleteTitle"> Delete</h2>
         </div>
-        <form method="POST" action="{{route('dash.destroy')}}">
+        <form method="POST" action="{{route('zone.destroy')}}">
             @method('delete')
             @csrf
         <input type="hidden" id="deleteID" name="id"/>
         <div class="p-6 flex flex-row justify-evenly">
             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
-                {{ __('Are you sure you want to delete this record?') }}
+                {{ __('Are you sure you want to delete this zone?') }}
             </h2>
         </div>
         <div class="p-6">
@@ -81,52 +82,10 @@
     </x-modal>
 
     <script>
-        function handleChange(type) {
-            if (type == "MX") {
-                document.querySelector("#priority").classList.remove('hidden');
-            } else {
-                document.querySelector("#priority").classList.add('hidden');
-            }
-        }
-
         document.addEventListener('livewire:load', function () {
-            @this.on('edit', (record) => {
-                document.querySelector("#editTitle").innerHTML = "Edit " + record.name;
-                document.querySelector("#editHost").value = record.name;
-                document.querySelector("#editTTL").value = record.ttl;
-                var type = document.querySelector("#editType");
-                var recordIndex = 0;
-                switch (record.type) {
-                    case "A":
-                        recordIndex = 0;
-                        break;
-                    case "AAAA":
-                        recordIndex = 1;
-                        break;
-                    case "TXT":
-                        recordIndex = 2;
-                        break;
-                    case "CNAME":
-                        recordIndex = 3;
-                        break;
-                    case "MX":
-                        recordIndex = 4;
-                        break;
-                    default:
-                        recordIndex = 0;
-                }
-                document.querySelector("#editType").selectedIndex = recordIndex;
-                if (record.type == "MX") {
-                    document.querySelector("#priority").classList.toggle('hidden');
-                    document.querySelector("#editPriority").value = record.prio;
-                }
-                document.querySelector("#editValue").value = record.content;
-                document.querySelector("#editID").value = record.id;
-            })
-
             @this.on('delete', (record) => {
-                document.querySelector("#deleteTitle").innerHTML = "Delete " + record.type + " record for " + record.name + " ?";
-                document.querySelector("#deleteID").value = record.id;
+                document.querySelector("#deleteTitle").innerHTML = "Delete " + record + " zone ?";
+                document.querySelector("#deleteID").value = record;
             })
         })
     </script>
