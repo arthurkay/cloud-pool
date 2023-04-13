@@ -22,12 +22,10 @@ class ShowRecords extends Component
         $this->readyToLoad = true;
         $perPage = 10;
         $items = Redis::keys("*");
-        $page = null;
         $options = [];
-        $page = $page ?: (Paginator::resolveCurrentPage() ?: 1);
+        $page = $this->page ?: (Paginator::resolveCurrentPage() ?: 1);
         $items = $items instanceof Collection ? $items : Collection::make($items);
         $this->records =  new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
-        //$this->records = Paginator::make(Redis::keys("*"),count(Redis::keys("*")), 10);
     }
 
     public function gotoPage($page, $pageName = 'page') {

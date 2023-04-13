@@ -5,7 +5,9 @@ namespace App\Http\Livewire\Widgets;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Redis;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Collection;
 
 class ZoneRecords extends Component
 {
@@ -19,7 +21,12 @@ class ZoneRecords extends Component
 
     public function loadRecords() {
         $this->readyToLoad = true;
-        $this->records = new Paginator(Redis::hgetall($this->zone), 10);
+        $items = Redis::hgetall($this->zone);
+        $options = [];
+        $perPage = 10;
+        $page = $this->page ?: (Paginator::resolveCurrentPage() ?: 1);
+        $items = $items instanceof Collection ? $items : Collection::make($items);
+        $this->records =  new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
     }
 
     public function gotoPage($page, $pageName = 'page') {
