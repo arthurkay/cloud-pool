@@ -9,9 +9,10 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Collection;
 
-class ShowRecords extends Component
+class ZoneRecords extends Component
 {
     use WithPagination;
+    public $zone;
     private $records;
     public $readyToLoad = false;
     protected $listeners = [
@@ -20,9 +21,9 @@ class ShowRecords extends Component
 
     public function loadRecords() {
         $this->readyToLoad = true;
-        $perPage = 10;
-        $items = Redis::keys("*");
+        $items = Redis::hgetall($this->zone);
         $options = [];
+        $perPage = 10;
         $page = $this->page ?: (Paginator::resolveCurrentPage() ?: 1);
         $items = $items instanceof Collection ? $items : Collection::make($items);
         $this->records =  new LengthAwarePaginator($items->forPage($page, $perPage), $items->count(), $perPage, $page, $options);
@@ -40,11 +41,10 @@ class ShowRecords extends Component
     public function nextPage($pageName = 'page') {
         $this->gotoPage($this->page +1, $pageName);
     }
-
     public function render()
     {
         $empty = new Paginator([], 10);
-        return view('livewire.widgets.show-records', [
+        return view('livewire.widgets.zone-records', [
             'records' => $this->readyToLoad ?  $this->records : $empty,
         ]);
     }

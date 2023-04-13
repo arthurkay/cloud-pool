@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ __('Dashboard') }}
+            {{ $zone }}
         </h2>
     </x-slot>
 
@@ -12,10 +12,10 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     <x-primary-button type="button" data-drawer-target="drawer-right" data-drawer-show="drawer-right" data-drawer-placement="right" aria-controls="drawer-right">
-                        Add Zone
+                        Add Record
                     </x-primary-button>
                     <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700">
-                    <livewire:widgets.show-records />
+                    <livewire:widgets.zone-records :zone="$zone"/>
                 </div>
             </div>
         </div>

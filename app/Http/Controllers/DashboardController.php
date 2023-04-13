@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Redis;
+use  Illuminate\Support\Str;
 use App\Models\Record;
 
 class DashboardController extends Controller
@@ -64,19 +66,37 @@ class DashboardController extends Controller
      */
     public function update(Request $request)
     {
-        $record = Record::find($request->id);
-        $record->name = $request->host;
-        $record->ttl = $request->ttl;
-        $record->type = $request->type;
+        if ($request->type == "TXT") {
+            Redis::hset(Str::lower($request->zone), Str::lower($request->host), json_encode([Str::lower($request->type) => [
+                array('ttl' => (int)$request->ttl, 'text' => Str::lower($request->value))
+            ]]));
+        }
+
+        if ($request->type == "A") {
+            Redis::hset(Str::lower($request->zone), Str::lower($request->host), json_encode([Str::lower($request->type) => [
+                array('ttl' => (int)$request->ttl, 'ip' => Str::lower($request->value))
+            ]]));
+        }
+
+        if ($request->type == "AAAA") {
+            Redis::hset(Str::lower($request->zone), Str::lower($request->host), json_encode([Str::lower($request->type) => [
+                array('ttl' => (int)$request->ttl, 'ip' => Str::lower($request->value))
+            ]]));
+        }
+
+        if ($request->type == "CNAME") {
+            Redis::hset(Str::lower($request->zone), Str::lower($request->host), json_encode([Str::lower($request->type) => [
+                array('ttl' => (int)$request->ttl, 'host' => Str::lower($request->value))
+            ]]));
+        }
+
         if ($request->type == "MX") {
-            $record->prio = $request->priority;
-        }
-        $record->content = $request->value;
-        
-        if ($record->save()) {
-            return redirect()->back()->with('success','Record updated successfully');
-        }
-        return redirect()->back()->with('error','Unable to update record');
+            Redis::hset(Str::lower($request->zone), Str::lower($request->host), json_encode([Str::lower($request->type) => [
+                array('ttl' => (int)$request->ttl, 'preference' => (int)$request->priority, 'host' => Str::lower($request->value))
+            ]]));
+        } 
+        return redirect()->back()->with('success','Record updated successfully');
+
     }
 
     /**
@@ -84,10 +104,20 @@ class DashboardController extends Controller
      */
     public function destroy(Request $request)
     {
-        $record = Record::find($request->id);
-        if ($record->delete()) {
-            return redirect()->back()->with('success', 'Record successfully deleted');
-        }
-        return redirect()->back()->with('error', 'Unable to delete record');
+        Redis::hdel($request->zone, $request->id);
+        return redirect()->back()->with('success', 'Record successfully deleted');
+    }
+
+    public function zoneDestroy(Request $request)
+    {
+        Redis::del($request->id);
+        return redirect()->back()->with('success', 'Zone successfully deleted');
+    }
+
+    public function zone(String $zone) {
+        $params = [
+            'zone' => $zone
+        ];
+        return view('zone', $params);
     }
 }
