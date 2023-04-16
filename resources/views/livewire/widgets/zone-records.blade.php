@@ -16,87 +16,105 @@
     <div wire:init="loadRecords">
     @if (isset($records) && $records->count() > 0)
         @foreach ($records as $record => $details)
-            <div wire:loading.remove class="flex flex-row justify-evenly">
-                <div class="relative z-0 mb-6 group">
-                    <input disabled value="{{$record}}" type="text" name="host" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" "/>
-                    <label for="host" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Host</label>
-                </div>
+            
                 @foreach(json_decode($details, true) as $type => $options)
-                    <div class="relative z-0 mb-6 group">
-                        <input disabled value="{{$options[0]['ttl']}}" type="text" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" "/>
-                        <label for="ttl" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">TTL</label>
-                    </div>
-                    <div class="relative z-0 mb-6 group">
-                        <select disabled name="type" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:bg-transparent dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" ">
-                            <option {{$type == "a" ? "selected" : ""}} value="A">A</option>
-                            <option {{$type == "aaaa" ? "selected" : "" }} value="AAAA">AAAA</option>
-                            <option {{$type == "txt" ? "selected" : ""}} value="TXT">TXT</option>
-                            <option {{$type == "cname" ? "selected" : ""}} value="CNAME">CNAME</option>
-                            <option {{$type == "mx" ? "selected" : ""}} value="MX">MX</option>
-                        </select>
-                        <label for="type" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Type</label>
-                    </div>
-                    @if ($type == "mx")
+                
+                    @foreach($options as $option)
+                    <div wire:loading.remove class="flex flex-row justify-evenly">
                         <div class="relative z-0 mb-6 group">
-                            <input disabled type="number" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" value="{{$options[0]['preference']}}"/>
-                            <label for="priority" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Priority</label>
+                            <input disabled value="{{$record}}" type="text" name="host" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" "/>
+                            <label for="host" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Host</label>
                         </div>
-                    @endif
-                    @if ($type == "a" || $type == "aaaa")
-                    <div class="relative z-0 mb-6 group">
-                        <input disabled value="{{$options[0]['ip']}}" type="text" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" "/>
-                        <label for="value" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Value</label>
-                    </div>
-                    @endif
-                    @if ($type == "txt")
-                    <div class="relative z-0 mb-6 group">
-                        <input disabled value="{{$options[0]['text']}}" type="text" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" "/>
-                        <label for="value" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Value</label>
-                    </div>
-                    @endif
-                    @if ($type == "cname" || $type == "mx")
-                    <div class="relative z-0 mb-6 group">
-                        <input disabled value="{{$options[0]['host']}}" type="text" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" "/>
-                        <label for="value" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Value</label>
-                    </div>
-                    @endif
-                    @if ($type != "mx")
                         <div class="relative z-0 mb-6 group">
-                            <input disabled type="number" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer invisible"/>
+                            <input disabled value="{{$option['ttl']}}" type="text" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" "/>
+                            <label for="ttl" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">TTL</label>
                         </div>
-                    @endif
-                    <div class="relative z-0 mb-6 justify-between group">
-                        @if ($type == "a" || $type == "aaaa")
-                        <x-secondary-button wire:click="$emit('edit', '{{$record}}', '{{$type}}', '{{$options[0]['ttl']}}', '{{$options[0]['ip']}}', '')" x-data=""
-                        x-on:click.prevent="$dispatch('open-modal', 'confirm-record-edit')">
-                            Edit
-                        </x-secondary-button>
-                        @endif
-                        @if ($type == "cname")
-                        <x-secondary-button wire:click="$emit('edit', '{{$record}}', '{{$type}}', '{{$options[0]['ttl']}}', '{{$options[0]['host']}}', '')" x-data=""
-                        x-on:click.prevent="$dispatch('open-modal', 'confirm-record-edit')">
-                            Edit
-                        </x-secondary-button>
-                        @endif
+                        <div class="relative z-0 mb-6 group">
+                            <select disabled name="type" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:bg-transparent dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" ">
+                                <option {{$type == "a" ? "selected" : ""}} value="A">A</option>
+                                <option {{$type == "aaaa" ? "selected" : "" }} value="AAAA">AAAA</option>
+                                <option {{$type == "txt" ? "selected" : ""}} value="TXT">TXT</option>
+                                <option {{$type == "cname" ? "selected" : ""}} value="CNAME">CNAME</option>
+                                <option {{$type == "mx" ? "selected" : ""}} value="MX">MX</option>
+                            </select>
+                            <label for="type" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Type</label>
+                        </div>
                         @if ($type == "mx")
-                        <x-secondary-button wire:click="$emit('edit', '{{$record}}', '{{$type}}', '{{$options[0]['ttl']}}', '{{$options[0]['host']}}', '{{$options[0]['preference']}}')" x-data=""
-                        x-on:click.prevent="$dispatch('open-modal', 'confirm-record-edit')">
-                            Edit
-                        </x-secondary-button>
+                            <div class="relative z-0 mb-6 group">
+                                <input disabled type="number" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" value="{{$option['preference']}}"/>
+                                <label for="priority" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Priority</label>
+                            </div>
+                        @endif
+                        @if ($type == "a" || $type == "aaaa")
+                        <div class="relative z-0 mb-6 group">
+                            <input disabled value="{{$option['ip']}}" type="text" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" "/>
+                            <label for="value" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Value</label>
+                        </div>
                         @endif
                         @if ($type == "txt")
-                        <x-secondary-button wire:click="$emit('edit', '{{$record}}', '{{$type}}', '{{$options[0]['ttl']}}', '{{$options[0]['text']}}', '')" x-data=""
-                        x-on:click.prevent="$dispatch('open-modal', 'confirm-record-edit')">
-                            Edit
-                        </x-secondary-button>
+                        <div class="relative z-0 mb-6 group">
+                            <input disabled value="{{$option['text']}}" type="text" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" "/>
+                            <label for="value" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Value</label>
+                        </div>
                         @endif
-                        <x-danger-button wire:click="$emit('delete', '{{$record}}', '{{$type}}')" x-data=""
-                        x-on:click.prevent="$dispatch('open-modal', 'confirm-record-delete')">
-                            Delete
-                        </x-danger-button>
+                        @if ($type == "cname" || $type == "mx")
+                        <div class="relative z-0 mb-6 group">
+                            <input disabled value="{{$option['host']}}" type="text" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" "/>
+                            <label for="value" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Value</label>
+                        </div>
+                        @endif
+                        @if ($type != "mx")
+                            <div class="relative z-0 mb-6 group">
+                                <input disabled type="number" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer invisible"/>
+                            </div>
+                        @endif
+                        <div class="relative z-0 mb-6 justify-between group">
+                            @if ($type == "a" || $type == "aaaa")
+                            <x-secondary-button wire:click="$emit('edit', '{{$record}}', '{{$type}}', '{{$option['ttl']}}', '{{$option['ip']}}', '')" x-data=""
+                            x-on:click.prevent="$dispatch('open-modal', 'confirm-record-edit')">
+                                Edit
+                            </x-secondary-button>
+                            <x-danger-button wire:click="$emit('delete', '{{$record}}', '{{$type}}', '{{$option['ip']}}')" x-data=""
+                            x-on:click.prevent="$dispatch('open-modal', 'confirm-record-delete')">
+                                Delete
+                            </x-danger-button>
+                            @endif
+                            @if ($type == "cname")
+                            <x-secondary-button wire:click="$emit('edit', '{{$record}}', '{{$type}}', '{{$option['ttl']}}', '{{$option['host']}}', '')" x-data=""
+                            x-on:click.prevent="$dispatch('open-modal', 'confirm-record-edit')">
+                                Edit
+                            </x-secondary-button>
+                            <x-danger-button wire:click="$emit('delete', '{{$record}}', '{{$type}}', '{{$option['host']}}')" x-data=""
+                            x-on:click.prevent="$dispatch('open-modal', 'confirm-record-delete')">
+                                Delete
+                            </x-danger-button>
+                            @endif
+                            @if ($type == "mx")
+                            <x-secondary-button wire:click="$emit('edit', '{{$record}}', '{{$type}}', '{{$option['ttl']}}', '{{$option['host']}}', '{{$option['preference']}}')" x-data=""
+                            x-on:click.prevent="$dispatch('open-modal', 'confirm-record-edit')">
+                                Edit
+                            </x-secondary-button>
+                            <x-danger-button wire:click="$emit('delete', '{{$record}}', '{{$type}}', '{{$option['host']}}')" x-data=""
+                            x-on:click.prevent="$dispatch('open-modal', 'confirm-record-delete')">
+                                Delete
+                            </x-danger-button>
+                            @endif
+                            @if ($type == "txt")
+                            <x-secondary-button wire:click="$emit('edit', '{{$record}}', '{{$type}}', '{{$option['ttl']}}', '{{$option['text']}}', '')" x-data=""
+                            x-on:click.prevent="$dispatch('open-modal', 'confirm-record-edit')">
+                                Edit
+                            </x-secondary-button>
+                            <x-danger-button wire:click="$emit('delete', '{{$record}}', '{{$type}}', '{{$option['text']}}')" x-data=""
+                            x-on:click.prevent="$dispatch('open-modal', 'confirm-record-delete')">
+                                Delete
+                            </x-danger-button>
+                            @endif
+                        </div>
                     </div>
+                    @endforeach
+  
                 @endforeach
-            </div>
+           
         @endforeach
         {{$records->links()}}
     @else
@@ -129,7 +147,7 @@
         <div class="p-6 flex flex-row justify-evenly">
             <input type="hidden" id="editID" name="id" />
             <div class="relative z-0 w-1/5 mb-6 group">
-                <input id="editHost" type="text" name="host" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" "/>
+                <input readonly id="editHost" type="text" name="host" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" "/>
                 <label for="host" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Host</label>
             </div>
         
@@ -137,9 +155,10 @@
                 <input id="editTTL" type="text" name="ttl" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" "/>
                 <label for="ttl" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">TTL</label>
             </div>
-        
+            
+            <input type="hidden" id="editTypeName" name="type" />
             <div class="relative z-0 w-1/5 mb-6 group">
-                <select id="editType" name="type" x-on:input="handleChange($event.target.value)" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:bg-transparent dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder="">
+                <select disabled id="editType" x-on:input="handleChange($event.target.value)" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:bg-transparent dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder="">
                     <option value="A">A</option>
                     <option value="AAAA">AAAA</option>
                     <option value="TXT">TXT</option>
@@ -153,7 +172,7 @@
                 <input id="editPriority" type="number" name="priority" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" value="0"/>
                 <label for="priority" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Priority</label>
             </div>
-        
+            <input type="hidden" name="oldValue" id="oldValue" />
             <div class="relative z-0 w-1/5 mb-6 group">
                 <input id="editValue" type="text" name="value" class="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer" placeholder=" "/>
                 <label for="value" class="peer-focus:font-medium absolute text-sm text-gray-500 dark:text-gray-400 duration-300 transform -translate-y-6 scale-75 top-3 -z-10 origin-[0] peer-focus:left-0 peer-focus:text-blue-600 peer-focus:dark:text-blue-500 peer-placeholder-shown:scale-100 peer-placeholder-shown:translate-y-0 peer-focus:scale-75 peer-focus:-translate-y-6">Value</label>
@@ -183,6 +202,8 @@
             @method('delete')
             @csrf
         <input type="hidden" id="deleteID" name="id"/>
+        <input type="hidden" id="deleteValue" name="deleteValue"/>
+        <input type="hidden" id="deleteType" name="deleteType"/>
         <input type="hidden" name="zone" value="{{$zone}}"/>
         <div class="p-6 flex flex-row justify-evenly">
             <h2 class="text-lg font-medium text-gray-900 dark:text-gray-100">
@@ -237,20 +258,22 @@
                     default:
                         recordIndex = 0;
                 }
-                console.debug(recordIndex);
-                console.debug(type);
                 document.querySelector("#editType").selectedIndex = recordIndex;
                 if (type == "mx") {
                     document.querySelector("#priority").classList.toggle('hidden');
                     document.querySelector("#editPriority").value = preference;
                 }
+                document.querySelector("#oldValue").value = content;
                 document.querySelector("#editValue").value = content;
+                document.querySelector("#editTypeName").value = type.toUpperCase();
             })
 
-            @this.on('delete', (record, type) => {
+            @this.on('delete', (record, type, content) => {
                 console.debug(record);
                 document.querySelector("#deleteTitle").innerHTML = "Delete " + type.toUpperCase() + " record for " + record + " ?";
                 document.querySelector("#deleteID").value = record;
+                document.querySelector("#deleteType").value = type;
+                document.querySelector("#deleteValue").value = content;
             })
         })
     </script>
