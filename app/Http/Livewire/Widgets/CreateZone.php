@@ -14,7 +14,7 @@ class CreateZone extends Component
         $this->validate([
             'zone' => 'required'
         ]);
-        Redis::hset(Str::lower($this->zone), '@', json_encode(['a' => [
+        Redis::hset(Str::lower($this->zone).'.', '@', json_encode(['a' => [
             array('ttl' => 3600, 'ip' => '127.0.0.1')
         ]]));
         $this->emit('recordUpdated');
