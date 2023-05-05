@@ -8,7 +8,7 @@ use  Illuminate\Support\Str;
 
 class CreateRecord extends Component
 {
-    public $zone, $name, $ttl = "3600", $type, $content, $priority;
+    public $zone, $name, $ttl = "3600", $type = "A", $content, $priority;
     public function store() {
         $this->validate([
             'name' => 'required',
