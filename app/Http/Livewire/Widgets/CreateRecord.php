@@ -4,7 +4,7 @@ namespace App\Http\Livewire\Widgets;
 
 use Livewire\Component;
 use Illuminate\Support\Facades\Redis;
-use  Illuminate\Support\Str;
+use Illuminate\Support\Str;
 
 class CreateRecord extends Component
 {
