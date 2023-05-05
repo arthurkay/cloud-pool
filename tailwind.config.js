@@ -16,7 +16,7 @@ module.exports = {
             },
         },
     },
-    darkMode: 'media',
+    darkMode: 'class',
 
     plugins: [require('@tailwindcss/forms'), require('flowbite/plugin')],
 };
