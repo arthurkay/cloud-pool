@@ -269,7 +269,6 @@
             })
 
             @this.on('delete', (record, type, content) => {
-                console.debug(record);
                 document.querySelector("#deleteTitle").innerHTML = "Delete " + type.toUpperCase() + " record for " + record + " ?";
                 document.querySelector("#deleteID").value = record;
                 document.querySelector("#deleteType").value = type;
