@@ -1,9 +1,4 @@
 <x-app-layout>
-    <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
-            {{ rtrim($zone, '.') }}
-        </h2>
-    </x-slot>
 
     @include('widgets.alert')
 
@@ -14,6 +9,7 @@
                     <x-primary-button type="button" data-drawer-target="drawer-right" data-drawer-show="drawer-right" data-drawer-placement="right" aria-controls="drawer-right">
                         Add Record
                     </x-primary-button>
+                    <span class="float-right">{{ rtrim($zone, '.') }}</span>
                     <hr class="w-48 h-1 mx-auto my-4 bg-gray-100 border-0 rounded md:my-10 dark:bg-gray-700">
                     <livewire:widgets.zone-records :zone="$zone"/>
                 </div>

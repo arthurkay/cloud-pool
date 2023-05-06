@@ -9,13 +9,34 @@ use Illuminate\Support\Str;
 class CreateRecord extends Component
 {
     public $zone, $name, $ttl = "3600", $type = "A", $content, $priority;
+    protected $rules = [
+        'name' => 'required',
+        'ttl' => 'required|integer',
+        'type' => 'required',
+        'content' => 'required'
+    ];
+    
     public function store() {
-        $this->validate([
-            'name' => 'required',
-            'ttl' => 'required|integer',
-            'type' => 'required',
-            'content' => 'required'
-        ]);
+        $this->validate();  
+
+        if ($this->type == "A") {
+            $this->validate([
+                'content' => 'required|ipv4'
+            ]);
+        }
+
+        if ($this->type == "AAAA") {
+            $this->validate([
+                'content' => 'required|ipv6'
+            ]);
+        }
+
+        if ($this->type == "MX") {
+            $this->validate([
+                'priority' => 'required:integer',
+                'content' => 'required'
+            ]);
+        }
 
         if ($this->type == "TXT") {
             $subdomain = Redis::hget(Str::lower($this->zone), Str::lower($this->name));

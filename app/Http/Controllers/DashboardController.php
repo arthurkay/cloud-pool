@@ -9,6 +9,13 @@ use App\Models\Record;
 
 class DashboardController extends Controller
 {
+    protected $rules = [
+        'host' => 'required',
+        'ttl' => 'required|integer',
+        'type' => 'required',
+        'value' => 'required'
+    ];
+
     /**
      * Display a listing of the resource.
      */
@@ -66,6 +73,27 @@ class DashboardController extends Controller
      */
     public function update(Request $request)
     {
+        $this->validate($request, $this->rules);
+
+        if ($request->type == "A") {
+            $this->validate($request, [
+                'value' => 'required|ipv4'
+            ]);
+        }
+
+        if ($request->type == "AAAA") {
+            $this->validate($request, [
+                'value' => 'required|ipv6'
+            ]);
+        }
+
+        if ($request->type == "MX") {
+            $this->validate($request, [
+                'priority' => 'required:integer',
+                'value' => 'required'
+            ]);
+        }
+
         $subdomain = Redis::hget(Str::lower($request->zone), Str::lower($request->host));
         if ($request->type == "TXT") {
             if (!empty($subdomain)) {
